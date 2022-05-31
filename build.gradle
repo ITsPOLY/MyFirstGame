@@ -4,12 +4,12 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
-group 'ru.ac.uniyar.apps.fxappone'
+group 'org.openjfx'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 11
 
-mainClassName = 'ru.ac.uniyar.apps.fxappone.Main'
+mainClassName = 'org.openjfx.Main'
 
 repositories {
     mavenCentral()
