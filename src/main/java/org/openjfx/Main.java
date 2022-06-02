@@ -2,10 +2,6 @@ package org.openjfx;
 
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -14,17 +10,121 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class Main extends Application {
+    Group root = new Group();
+    public List<String> list = new ArrayList<>();
+    public int [][] eggCoord = {{197,256}, {690,256}, {197,370}, {690,370}};
+    public int result = 0;
+
+    private void eggsMove() throws FileNotFoundException {
+        int random = new Random().nextInt(250);
+        Text text = new Text(40, 100, "SCORE: ");
+        text.setFill(Color.GREENYELLOW);
+        text.setStroke(Color.OLIVEDRAB);
+        text.setStrokeWidth(1.2);
+        text.setFont(Font.font("Verdana, BOLD", 55));
+        if (random == 0) {
+            Eggs eggs = new Eggs(eggCoord);
+            Image imageEgg;
+            imageEgg = eggs.getImage();
+            ImageView egg = new ImageView(imageEgg);
+            int coordinateX = eggs.getСoordinateX();
+            int coordinateY = eggs.getСoordinateY();
+            int kindEgg = eggs.getKindEgg();
+            egg.setFitHeight(58);
+            egg.setFitWidth(58);
+            egg.setTranslateY(coordinateY);
+            egg.setTranslateX(coordinateX);
+            int a = 8;
+            int x = 0;
+            int y = 0;
+            for (int k = 0; k < 5; k++) {
+                 if (Arrays.equals(new int[]{coordinateX, coordinateY}, eggCoord[1])
+                        || Arrays.equals(new int[]{coordinateX, coordinateY}, eggCoord[3])) {
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(2000), egg);
+                    translateTransition.setFromX(coordinateX);
+                    translateTransition.setToX(coordinateX - a);
+                    translateTransition.setFromY(coordinateY);
+                    translateTransition.setToY(coordinateY + a);
+                    translateTransition.setCycleCount(1);
+                    translateTransition.setAutoReverse(true);
+                    translateTransition.play();
+                    x = coordinateX - a;
+                    y = coordinateY + a;
+                } else {
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(2000), egg);
+                    translateTransition.setFromX(coordinateX);
+                    translateTransition.setToX(coordinateX + a);
+                    translateTransition.setFromY(coordinateY);
+                    translateTransition.setToY(coordinateY + a);
+                    translateTransition.setCycleCount(1);
+                    translateTransition.setAutoReverse(true);
+                    translateTransition.play();
+                     x = coordinateX + a;
+                     y = coordinateY + a;
+                }
+                a += 8;
+            }
+            root.getChildren().add(egg);
+            root.getChildren().add(text);
+            System.out.println(x);
+            System.out.println(y);
+
+            if (Objects.equals(list.get(0), "Q") && x == 237 && y == 296) {
+                if (kindEgg == 0) {
+                    result -= 1;
+                } else if (kindEgg == 1) {
+                    result += 2;
+                } else if (kindEgg == 2) {
+                    result++;
+                }
+                System.out.println(result);
+            }
+            if (Objects.equals(list.get(0), "E") && x == 650 && y == 296) {
+                if (kindEgg == 0) {
+                    result -= 1;
+                } else if (kindEgg == 1) {
+                    result += 2;
+                } else if (kindEgg == 2) {
+                    result++;
+                }
+                System.out.println(result);
+            }
+            if (Objects.equals(list.get(0), "A") && x == 237 && y == 410) {
+                if (kindEgg == 0) {
+                    result -= 1;
+                } else if (kindEgg == 1) {
+                    result += 2;
+                } else if (kindEgg == 2) {
+                    result++;
+                }
+                System.out.println(result);
+            }
+            if (Objects.equals(list.get(0), "D") && x == 650 && y == 410) {
+                if (kindEgg == 0) {
+                    result -= 1;
+                } else if (kindEgg == 1) {
+                    result += 2;
+                } else if (kindEgg == 2) {
+                    result++;
+                }
+                System.out.println(result);
+            }
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Group root = new Group();
         Scene scene = new Scene(root, 940, 680);
 
         primaryStage.setScene(scene);
@@ -39,7 +139,7 @@ public class Main extends Application {
         background.setFitHeight(680);
         background.setFitWidth(940);
 
-        final Canvas canvas = new Canvas(940,680);
+        final Canvas canvas = new Canvas(680,600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         root.getChildren().add(canvas);
 
@@ -58,119 +158,53 @@ public class Main extends Application {
                 if (content.equals("Q")) {
                     gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                     gc.drawImage(wolf_1, 70, 60, 790, 550);
+                    if (!list.isEmpty()) {
+                        list.remove(list.get(0));
+                    }
+                    list.add(content);
+                    System.out.println(list);
                 }
                 if (content.equals("E")) {
                     gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                     gc.drawImage(wolf_2, 78, 60, 790, 550);
+                    if (!list.isEmpty()) {
+                        list.remove(list.get(0));
+                    }
+                    list.add(content);
+                    System.out.println(list);
                 }
                 if (content.equals("A")) {
                     gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                     gc.drawImage(wolf_3, 70, 60, 790, 550);
+                    if (!list.isEmpty()) {
+                        list.remove(list.get(0));
+                    }
+                    list.add(content);
+                    System.out.println(list);
                 }
                 if (content.equals("D")) {
                     gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                     gc.drawImage(wolf_4, 78, 60, 790, 550);
+                    if (!list.isEmpty()) {
+                        list.remove(list.get(0));
+                    }
+                    list.add(content);
+                    System.out.println(list);
                 }
             }
         });
 
-        FileInputStream egg_1 = new FileInputStream("C:\\Users\\Polina\\Documents\\GitHub\\MyFirstGame\\src\\images\\egg_Addled_1.png");
-        Image eggAddled = new Image(egg_1);
-        FileInputStream egg_2 = new FileInputStream("C:\\Users\\Polina\\Documents\\GitHub\\MyFirstGame\\src\\images\\egg_Golden_1.png");
-        Image eggGolden = new Image(egg_2);
-        FileInputStream egg_3 = new FileInputStream("C:\\Users\\Polina\\Documents\\GitHub\\MyFirstGame\\src\\images\\egg_White_1.png");
-        Image eggWhite = new Image(egg_3);
-
-        ArrayList<Image> kinds = new ArrayList<>();
-        kinds.add(eggAddled);
-        kinds.add(eggGolden);
-        kinds.add(eggWhite);
-
-        int [][] eggCoord = {{197,256}, {690,256}, {197,370}, {690,370}};
-
-        int width = 58;
-        int height = 58;
-        int i = 8;
-
-        BooleanProperty b = new SimpleBooleanProperty();
-
-        for (int k = 0; k < 2; k++) {
-            Eggs eggs = new Eggs(kinds, eggCoord);
-            Image imageEgg;
-            imageEgg = eggs.getImage();
-            ImageView egg = new ImageView(imageEgg);
-            int coordinateX = eggs.getСoordinateX();
-            int coordinateY = eggs.getСoordinateY();
-
-            DoubleProperty x = new SimpleDoubleProperty();
-            DoubleProperty y = new SimpleDoubleProperty();
-
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.millis(0),
-                            new KeyValue(x, coordinateX),
-                            new KeyValue(y, coordinateY),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(1000),
-                            new KeyValue(x, coordinateX + i),
-                            new KeyValue(y, coordinateY + i),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(1500),
-                            new KeyValue(x, coordinateX + i),
-                            new KeyValue(y, coordinateY + i),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(2000),
-                            new KeyValue(x, coordinateX + 2*i),
-                            new KeyValue(y, coordinateY + 2*i),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(2500),
-                            new KeyValue(x, coordinateX + 2*i),
-                            new KeyValue(y, coordinateY + 2*i),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(3000),
-                            new KeyValue(x, coordinateX + 3*i),
-                            new KeyValue(y, coordinateY + 3*i),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(3500),
-                            new KeyValue(x, coordinateX + 3*i),
-                            new KeyValue(y, coordinateY + 3*i),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(4000),
-                            new KeyValue(x, coordinateX + 4*i),
-                            new KeyValue(y, coordinateY + 4*i),
-                            new KeyValue(b, false)
-                    ),
-                    new KeyFrame(Duration.millis(4500),
-                            new KeyValue(x, coordinateX + 4*i),
-                            new KeyValue(y, coordinateY + 4*i),
-                            new KeyValue(b, true)
-                    )
-            );
-            timeline.setCycleCount(1);
-            timeline.setAutoReverse(true);
-
-            AnimationTimer timer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    egg.setTranslateX(x.doubleValue());
-                    egg.setTranslateY(y.doubleValue());
-                    egg.setFitHeight(height);
-                    egg.setFitWidth(width);
-                    if (b.getValue()){
-                        root.getChildren().remove(egg);
-                    }
+        AnimationTimer animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                try {
+                    eggsMove();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-            };
-            root.getChildren().add(egg);
-            timer.start();
-            timeline.play();
-        }
+            }
+        };
+        animationTimer.start();
     }
 
     public static void main(String[] args) {
